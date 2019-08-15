@@ -1,0 +1,28 @@
+/**
+  全局样式放这里
+ */
+@import "./variables.scss";
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.akm-no-padding {
+    padding: 0 !important;
+}
+
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
