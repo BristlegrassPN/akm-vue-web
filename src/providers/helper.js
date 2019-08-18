@@ -1,4 +1,5 @@
 import vue from '@/main'
+
 /**
  * util:业务无关的工具方法
  * helper:业务或框架有关的工具方法
@@ -72,8 +73,18 @@ const warningMessage = (message = '') => {
     type: 'warning'
   })
 }
+
+const warningConfirm = (message) => {
+  return vue.$confirm(message, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+}
+
 export default {
   successMessage,
   errorMessage,
   warningMessage,
+  warningConfirm
 }

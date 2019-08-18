@@ -68,10 +68,12 @@ const del = function(url, data, config) {
   return request({
     method: 'DELETE',
     url,
-    params: data,
+    data: data,
+    headers: {'Content-Type': 'application/json;charset=UTF-8'},
     ...config
   })
 }
+
 const post = (url, data, config) => {
   return request({
     method: 'POST',
