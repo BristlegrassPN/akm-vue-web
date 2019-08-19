@@ -58,11 +58,11 @@
       </el-col>
       <el-col :xs="24" :sm="10" :md="12">
         <el-form :model="condition" :rules="rules" ref="form" label-width="120px" class="tree-form">
-          <el-form-item label="api名称" prop="name">
-            <el-input v-model="condition.name" clearable ref="nameInput"></el-input>
+          <el-form-item label="Api名称" prop="name">
+            <el-input v-model="condition.name" clearable ref="nameInput" placeholder="如：用户管理"></el-input>
           </el-form-item>
-          <el-form-item label="api地址" prop="uri">
-            <el-input v-model="condition.uri" clearable></el-input>
+          <el-form-item label="Api地址" prop="uri">
+            <el-input v-model="condition.uri" clearable placeholder="如：/user/op/**"></el-input>
           </el-form-item>
           <el-form-item label="排序" prop="seq">
             <el-input type="number" min="0" v-model="condition.seq" clearable></el-input>
@@ -71,11 +71,11 @@
             <el-input type="textarea" v-model="condition.remark" clearable></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submit" size="medium" :loading="addLoading">
+            <el-button type="primary" @click="submit" size="small" :loading="addLoading">
               <span v-if="condition.id">编辑</span>
               <span v-else>新增</span>
             </el-button>
-            <el-button @click="reset" size="medium">重置</el-button>
+            <el-button @click="reset" size="small">重置</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -244,7 +244,7 @@ export default {
 <style lang="scss" scoped>
 .filter-input {
   margin: 4px 0;
-  width: 260px;
+  width: 157px;
 }
 
 .tree-form {
@@ -261,5 +261,6 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+  padding-left: 4px;
 }
 </style>
