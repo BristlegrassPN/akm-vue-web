@@ -25,7 +25,7 @@
       </div>
       <the-dict-table
         @selection-change="onSelectionChange"
-        :tableData="tableData"
+        :data="tableData"
       ></the-dict-table>
       <div class="block">
         <el-pagination

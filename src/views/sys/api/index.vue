@@ -2,21 +2,10 @@
   <el-card shadow="hover">
     <el-row>
       <el-col :xs="24" :sm="14" :md="10">
-        <el-row type="flex" justify="space-between">
-          <el-col>
-            <el-button type="primary" @click="addNode(0)" size="small">新增根结点</el-button>
-            <el-button type="danger"
-                       @click="batchDel(checkedKeys)"
-                       size="small"
-                       :disabled="!checkedKeys.length"
-                       :loading="delLoading">
-              删除
-            </el-button>
-          </el-col>
-          <el-col class="akm-text-right">
-            <el-button @click="expandAll(true)" size="small" :disabled="!treeData.length">全部展开</el-button>
-            <el-button @click="expandAll(false)" size="small" :disabled="!treeData.length">全部折叠</el-button>
-          </el-col>
+        <el-row>
+          <el-button @click="expandAll(true)" size="small" :disabled="!treeData.length">全部展开</el-button>
+          <el-button @click="expandAll(false)" size="small" :disabled="!treeData.length">全部折叠</el-button>
+          <el-button type="primary" @click="addNode('0')" size="small">新增根结点</el-button>
         </el-row>
         <el-input
           class="filter-input"
@@ -30,12 +19,10 @@
           :data="treeData"
           :default-expand-all="defaultExpandAll"
           node-key="id"
-          show-checkbox
           :default-expanded-keys="defaultExpandedKeys"
           :filter-node-method="filterNode"
           @node-expand="onExpand"
           @node-collapse="onCollapse"
-          @check="onCheck"
           @node-click="onNodeClick">
           <div class="custom-tree-node" slot-scope="{ node, data }">
             <div>{{ node.label }}</div>
@@ -168,9 +155,6 @@ export default {
       this.expandedKeys = this.expandedKeys.filter(key => key !== data.id)
       console.log(this.expandedKeys)
     },
-    onCheck(data, checked) {
-      this.checkedKeys = checked.checkedKeys
-    },
     // 点击node更新表单数据
     onNodeClick(data) {
       let formData = {...data}
@@ -228,6 +212,10 @@ export default {
           this.addLoading = true
           this.$http.post('/sys/api/op/insertOrUpdate', this.condition).then(() => {
             this.$helper.successMessage(this.condition.id ? '修改成功' : '新增成功')
+            // 新增子节点展开父节点
+            if (!this.expandedKeys.includes(this.condition.parentId)) {
+              this.expandedKeys.push(this.condition.parentId)
+            }
             this.reset()
             this.fetchTreeData()
             this.addLoading = false
@@ -258,6 +246,5 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
-  padding-left: 4px;
 }
 </style>

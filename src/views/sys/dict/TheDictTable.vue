@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-table
-      :data="tableData"
+      :data="data"
       @selection-change="onSelectionChange">
       <el-table-column
         type="selection"
@@ -48,7 +48,7 @@
 export default {
   name: 'TheDictTable',
   props: {
-    tableData: {
+    data: {
       type: Array,
       default() {
         return []
