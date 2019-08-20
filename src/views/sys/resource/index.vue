@@ -4,7 +4,7 @@
       <el-col :xs="24" :sm="14" :md="10">
         <el-row type="flex" justify="space-between">
           <el-col>
-            <el-button type="primary" @click="addNode(0)" size="small">新增根结点</el-button>
+            <el-button type="primary" @click="addNode('0')" size="small">新增根结点</el-button>
             <el-button type="danger"
                        @click="batchDel(checkedKeys)"
                        size="small"
@@ -57,12 +57,22 @@
         </el-tree>
       </el-col>
       <el-col :xs="24" :sm="10" :md="12">
-        <el-form :model="condition" :rules="rules" ref="form" label-width="120px" class="tree-form">
-          <el-form-item label="Api名称" prop="name">
+        <el-form :model="condition" :rules="rules" ref="form" label-width="120px">
+          <el-form-item label="是否启用">
+            <el-switch v-model="condition.enable"></el-switch>
+          </el-form-item>
+          <el-form-item label="资源类型" prop="type">
+            <akm-select
+              :data="resourceType"
+              :value.sync="condition.type"
+              placeholder="请选择资源类型"
+            ></akm-select>
+          </el-form-item>
+          <el-form-item label="资源类型" prop="name">
             <el-input v-model="condition.name" clearable ref="nameInput" placeholder="如：用户管理"></el-input>
           </el-form-item>
-          <el-form-item label="Api地址" prop="uri">
-            <el-input v-model="condition.uri" clearable placeholder="如：/user/op/**"></el-input>
+          <el-form-item label="资源资源编码" prop="code">
+            <el-input v-model="condition.code" clearable placeholder="如：sys:add"></el-input>
           </el-form-item>
           <el-form-item label="排序" prop="seq">
             <el-input type="number" min="0" v-model="condition.seq" clearable></el-input>
@@ -86,22 +96,16 @@
 
 <script>
 export default {
-  name: 'api',
+  name: 'resource',
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val)
     }
   },
   data() {
-    const validateUri = (rule, value, callback) => {
-      const reg = /^[a-zA-Z0-9_\-\*\/]+$/
-      if (reg.test(value)) {
-        callback()
-      } else {
-        callback(new Error('接口uri输入不合法'))
-      }
-    }
     return {
+      resourceType: [],
+
       filterText: '',
 
       treeData: [],
@@ -119,30 +123,38 @@ export default {
 
       condition: {
         id: '',
-        parentId: 0,
+        parentId: '0',
+        type: 1,
         name: '',
-        uri: '',
-        seq: '',
+        code: '',
         remark: '',
+        seq: '',
+        clientType: 1,
+        enable: true
       },
       rules: {
-        name: [
-          {required: true, message: '请输入接口名称', trigger: 'change'}
+        type: [
+          { required: true, message: '请选择资源类型', trigger: 'change' }
         ],
-        uri: [
-          {required: true, message: '请输入接口uri', trigger: 'change'},
-          {validator: validateUri, trigger: 'change'}
-        ]
+        name: [
+          { required: true, message: '请选择资源类型', trigger: 'change' }
+        ],
+        code: [
+          { required: true, message: '请选择资源类型', trigger: 'change' }
+        ],
       },
     }
   },
   created() {
     this.fetchTreeData()
+    this.$helper.fetchDictData('resource_type').then(res => {
+      this.resourceType = res
+    })
   },
   methods: {
     fetchTreeData() {
-      this.$http.post('/sys/api/view/findAll').then(list => {
-        this.treeData = this.buildTree(0, list)
+      this.$http.post('/sys/resource/view/findAll').then(list => {
+        this.treeData = this.buildTree('0', list)
         this.defaultExpandedKeys = this.expandedKeys
       })
     },
@@ -169,11 +181,12 @@ export default {
       console.log(this.expandedKeys)
     },
     onCheck(data, checked) {
+      console.log(checked)
       this.checkedKeys = checked.checkedKeys
     },
     // 点击node更新表单数据
     onNodeClick(data) {
-      let formData = {...data}
+      let formData = { ...data }
       delete formData.children
       this.condition = formData
     },
@@ -206,7 +219,7 @@ export default {
       this.$helper.warningConfirm(`即将删除${ids.length}条记录，确定删除吗？`).then(() => {
         this.delLoading = true
         this.reset()
-        this.$http.del('/sys/api/op/batchDel', ids).then(() => {
+        this.$http.del('/sys/resource/op/batchDel', ids).then(() => {
           this.$helper.successMessage('删除成功')
           this.expandedKeys = this.expandedKeys.filter(key => ids.indexOf(key) === -1)
           this.fetchTreeData()
@@ -220,13 +233,13 @@ export default {
     reset() {
       this.$refs.form.resetFields()
       this.condition.id = ''
-      this.condition.parentId = 0
+      this.condition.parentId = '0'
     },
     submit() {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.addLoading = true
-          this.$http.post('/sys/api/op/insertOrUpdate', this.condition).then(() => {
+          this.$http.post('/sys/resource/op/insertOrUpdate', this.condition).then(() => {
             this.$helper.successMessage(this.condition.id ? '修改成功' : '新增成功')
             this.reset()
             this.fetchTreeData()
@@ -245,10 +258,6 @@ export default {
 .filter-input {
   margin: 4px 0;
   width: 157px;
-}
-
-.tree-form {
-  margin-top: 30px;
 }
 
 .custom-tree-node {

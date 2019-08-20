@@ -4,6 +4,7 @@ import layout from '@/views/layout/index'
 import pageNotFound from '@/views/404'
 // import Main from '@/views/layout/Main'
 import Api from '@/views/sys/api'
+import Resource from '@/views/sys/resource'
 import Dict from '@/views/sys/dict'
 
 Vue.use(VueRouter)
@@ -17,6 +18,10 @@ export default new VueRouter({
       children: [
         {
           path: '',
+          component: Resource
+        },
+        {
+          path: 'api',
           component: Api
         },
         {

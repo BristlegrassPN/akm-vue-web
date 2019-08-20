@@ -1,4 +1,5 @@
 import vue from '@/main'
+import http from '@/providers/http'
 
 /**
  * util:业务无关的工具方法
@@ -82,9 +83,14 @@ const warningConfirm = (message) => {
   })
 }
 
+const fetchDictData = (type) => {
+  return http.postQueryString('/sys/dict/view/findByType', { type }, { cacheData: true })
+}
+
 export default {
   successMessage,
   errorMessage,
   warningMessage,
-  warningConfirm
+  warningConfirm,
+  fetchDictData,
 }

@@ -2,18 +2,16 @@
  * http
  */
 import axios from 'axios'
-
 import util from '@/providers/utils'
-import helper from '@/providers/helper'
 import globalData from '@/providers/globalData'
 
 let REQUEST_NUMBER = 0
 
-const showLoading = function(config) {
+const showLoading = function (config) {
   ++REQUEST_NUMBER
   // config.showLoading && helper.showLoading()
 }
-const hideLoading = function() {
+const hideLoading = function () {
   // --REQUEST_NUMBER === 0 && helper.hideLoading()
 }
 /**
@@ -31,7 +29,7 @@ const axiosBaseInstance = axios.create({
   responseType: 'json'
 })
 
-const request = function(config) {
+const request = function (config) {
   if (config.cacheData) { // 如果需要缓存，先尝试从sessionStorage中取数据
     let data = util.sessionStorage.get(JSON.stringify(config))
     if (data) {
@@ -40,7 +38,7 @@ const request = function(config) {
   }
   showLoading(config)
   if (globalData.token) { //  添加请求头
-    config.headers = {'Authorization': `Bearer ${globalData.token}`, ...config.headers}
+    config.headers = { 'Authorization': `Bearer ${globalData.token}`, ...config.headers }
   }
   return axiosBaseInstance.request(config).then(res => {
     hideLoading()
@@ -55,7 +53,7 @@ const request = function(config) {
   })
 }
 
-const get = function(url, data, config) {
+const get = function (url, data, config) {
   return request({
     method: 'GET',
     url,
@@ -64,12 +62,12 @@ const get = function(url, data, config) {
   })
 }
 
-const del = function(url, data, config) {
+const del = function (url, data, config) {
   return request({
     method: 'DELETE',
     url,
     data: data,
-    headers: {'Content-Type': 'application/json;charset=UTF-8'},
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     ...config
   })
 }
@@ -79,7 +77,7 @@ const post = (url, data, config) => {
     method: 'POST',
     url,
     data,
-    headers: {'Content-Type': 'application/json;charset=UTF-8'},
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     ...config
   })
 }
@@ -89,7 +87,16 @@ const postFormData = (url, data, config) => {
     method: 'POST',
     url,
     data,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    ...config
+  })
+}
+const postQueryString = (url, data, config) => {
+  return request({
+    method: 'POST',
+    url,
+    params: data,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     ...config
   })
 }
@@ -100,5 +107,6 @@ export default {
   get,
   del,
   post,
-  postFormData
+  postFormData,
+  postQueryString,
 }
