@@ -1,20 +1,10 @@
 <template>
-  <el-form :model="formData" :rules="rules" ref="form" label-width="120px" v-loading="loading">
-    <el-form-item label="是否启用">
-      <el-switch v-model="formData.enable"></el-switch>
-    </el-form-item>
-    <el-form-item label="资源类型" prop="type">
-      <akm-select
-        :data="resourceType"
-        :value.sync="formData.type"
-        placeholder="请选择资源类型"
-      ></akm-select>
-    </el-form-item>
-    <el-form-item label="资源名称" prop="name">
+  <el-form :model="formData" :rules="rules" ref="form" label-width="120px" class="tree-form" v-loading="loading">
+    <el-form-item label="Api名称" prop="name">
       <el-input v-model="formData.name" clearable ref="nameInput" placeholder="如：用户管理"></el-input>
     </el-form-item>
-    <el-form-item label="资源编码" prop="code">
-      <el-input v-model="formData.code" clearable placeholder="如：sys:add"></el-input>
+    <el-form-item label="Api地址" prop="uri">
+      <el-input v-model="formData.uri" clearable placeholder="如：/user/op/**"></el-input>
     </el-form-item>
     <el-form-item label="排序" prop="seq">
       <el-input type="number" min="0" v-model="formData.seq" clearable></el-input>
@@ -34,40 +24,40 @@
 
 <script>
 export default {
-  name: 'TheResourceForm',
+  name: 'TheApiForm',
   data() {
+    const validateUri = (rule, value, callback) => {
+      const reg = /^[a-zA-Z0-9_\-\*\/]+$/
+      if (reg.test(value)) {
+        callback()
+      } else {
+        callback(new Error('接口uri输入不合法'))
+      }
+    }
     return {
       loading: false,
-      resourceType: [],
 
       formData: {
         id: '',
-        parentId: '0',
-        type: 1,
+        parentId: 0,
         name: '',
-        code: '',
-        remark: '',
+        uri: '',
         seq: '',
-        clientType: 1,
-        enable: true
+        remark: '',
       },
       rules: {
-        type: [
-          { required: true, message: '请选择资源类型', trigger: 'change' }
-        ],
         name: [
-          { required: true, message: '请选择资源类型', trigger: 'change' }
+          { required: true, message: '请输入接口名称', trigger: 'change' }
         ],
-        code: [
-          { required: true, message: '请选择资源类型', trigger: 'change' }
-        ],
+        uri: [
+          { required: true, message: '请输入接口uri', trigger: 'change' },
+          { validator: validateUri, trigger: 'change' }
+        ]
       },
     }
   },
   created() {
-    this.$helper.fetchDictData('resource_type').then(res => {
-      this.resourceType = res
-    })
+
   },
   methods: {
     reset() {
@@ -80,7 +70,7 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$http.post('/sys/resource/op/insertOrUpdate', this.formData).then(() => {
+          this.$http.post('/sys/api/op/insertOrUpdate', this.formData).then(() => {
             this.loading = false
             this.$helper.successMessage(this.formData.id ? '修改成功' : '新增成功')
             this.$emit('formSubmit', this.formData.parentId)
@@ -99,9 +89,12 @@ export default {
       this.formData.parentId = parentId
     },
   }
+
 }
 </script>
 
 <style lang="scss" scoped>
-
+.tree-form {
+  margin-top: 30px;
+}
 </style>

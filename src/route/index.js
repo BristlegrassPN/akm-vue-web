@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import layout from '@/views/layout/index'
 import pageNotFound from '@/views/404'
-// import Main from '@/views/layout/Main'
+import Main from '@/views/layout/Main'
 import Api from '@/views/sys/api'
 import Resource from '@/views/sys/resource'
 import Dict from '@/views/sys/dict'
@@ -13,16 +13,25 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
+      name: 'test',
+      component: Resource,
+    },
+    {
+      path: '/layout',
       name: 'layout',
       component: layout,
       children: [
         {
           path: '',
-          component: Resource
+          component: Main
         },
         {
           path: 'api',
           component: Api
+        },
+        {
+          path: 'resource',
+          component: Resource
         },
         {
           path: 'dict',

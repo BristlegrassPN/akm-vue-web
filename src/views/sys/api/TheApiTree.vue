@@ -6,7 +6,7 @@
     </el-row>
     <el-input
       class="filter-input"
-      placeholder="根据资源名称和资源编码过滤"
+      placeholder="输入关键字进行过滤"
       size="small"
       v-model="filterText">
     </el-input>
@@ -22,7 +22,7 @@
       @node-collapse="onCollapse"
       @node-click="onNodeClick">
       <div class="custom-tree-node" slot-scope="{ node, data }">
-        <div :class="{ disable: !data.enable }">{{ node.label }}</div>
+        <div>{{ node.label }}</div>
         <div>
           <el-button
             type="text"
@@ -36,12 +36,6 @@
             @click="delNode(data,$event)">
             删除
           </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            @click="addApi(data,$event)">
-            分配Api
-          </el-button>
         </div>
       </div>
     </el-tree>
@@ -50,7 +44,7 @@
 
 <script>
 export default {
-  name: 'TheResourceTree',
+  name: 'TheApiTree',
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val)
@@ -76,7 +70,7 @@ export default {
   },
   methods: {
     fetchTreeData() {
-      this.$http.post('/sys/resource/view/findAll').then(list => {
+      this.$http.post('/sys/api/view/findAll').then(list => {
         this.treeData = this.buildTree('0', list)
         this.defaultExpandedKeys = this.expandedKeys
       })
@@ -124,13 +118,9 @@ export default {
       this.defaultExpandAll = !this.defaultExpandAll
       this.$refs.tree.store._getAllNodes().forEach(node => node.expanded = this.defaultExpandAll)
     },
-    addApi(data, event) {
-      event.stopPropagation()
-      this.$emit('nodeAddApi', parentId)
-    },
     filterNode(value, data) {
       if (!value) return true
-      return data.name.indexOf(value) !== -1 || data.code.indexOf(value) !== -1
+      return data.name.indexOf(value) !== -1 || data.uri.indexOf(value) !== -1
     },
     batchDel(ids) {
       if (!ids || ids.length === 0) {
@@ -138,7 +128,7 @@ export default {
       }
       this.$helper.warningConfirm(`即将删除${ids.length}条记录，确定删除吗？`).then(() => {
         this.$emit('nodeDel')
-        this.$http.del('/sys/resource/op/batchDel', ids).then(() => {
+        this.$http.del('/sys/api/op/batchDel', ids).then(() => {
           this.$helper.successMessage('删除成功')
           this.expandedKeys = this.expandedKeys.filter(key => ids.indexOf(key) === -1)
           this.fetchTreeData()
@@ -155,6 +145,7 @@ export default {
       this.fetchTreeData()
     },
   }
+
 }
 </script>
 
@@ -171,9 +162,5 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
-}
-
-.disable {
-  text-decoration: line-through;
 }
 </style>

@@ -30,11 +30,6 @@ export default {
     TheResourceTree,
     TheResourceForm
   },
-  watch: {
-    filterText(val) {
-      this.$refs.tree.filter(val)
-    }
-  },
   data() {
     return {}
   },
