@@ -36,12 +36,6 @@
             @click="delNode(data,$event)">
             删除
           </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            @click="addApi(data,$event)">
-            分配Api
-          </el-button>
         </div>
       </div>
     </el-tree>
@@ -110,37 +104,33 @@ export default {
     },
     delNode(data, event) {
       event.stopPropagation()
-      let ids = []
-      this.getNodeId(data, ids)
-      this.batchDel(ids)
+      let idList = []
+      this.getNodeId(data, idList)
+      this.batchDel(idList)
     },
-    getNodeId(data, ids) {
+    getNodeId(data, idList) {
       if (data.children && data.children.length) {
-        data.children.forEach(item => this.getNodeId(item, ids))
+        data.children.forEach(item => this.getNodeId(item, idList))
       }
-      ids.push(data.id)
+      idList.push(data.id)
     },
     expandAll() {
       this.defaultExpandAll = !this.defaultExpandAll
       this.$refs.tree.store._getAllNodes().forEach(node => node.expanded = this.defaultExpandAll)
     },
-    addApi(data, event) {
-      event.stopPropagation()
-      this.$emit('nodeAddApi', parentId)
-    },
     filterNode(value, data) {
       if (!value) return true
       return data.name.indexOf(value) !== -1 || data.code.indexOf(value) !== -1
     },
-    batchDel(ids) {
-      if (!ids || ids.length === 0) {
+    batchDel(idList) {
+      if (!idList || idList.length === 0) {
         return
       }
-      this.$helper.warningConfirm(`即将删除${ids.length}条记录，确定删除吗？`).then(() => {
+      this.$helper.warningConfirm(`即将删除${idList.length}条记录，确定删除吗？`).then(() => {
         this.$emit('nodeDel')
-        this.$http.del('/sys/resource/op/batchDel', ids).then(() => {
+        this.$http.del('/sys/resource/op/batchDel', idList).then(() => {
           this.$helper.successMessage('删除成功')
-          this.expandedKeys = this.expandedKeys.filter(key => ids.indexOf(key) === -1)
+          this.expandedKeys = this.expandedKeys.filter(key => idList.indexOf(key) === -1)
           this.fetchTreeData()
         }).catch(() => {
         })
@@ -154,6 +144,9 @@ export default {
       }
       this.fetchTreeData()
     },
+    onUpdateApi(resourceId, apiIdList) {
+      this.$refs.tree.getNode(resourceId).data.apiIdList = apiIdList
+    }
   }
 }
 </script>

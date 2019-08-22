@@ -1,20 +1,26 @@
 <template>
   <el-card shadow="hover">
     <el-row>
-      <el-col :xs="24" :sm="14" :md="10">
+      <el-col :xs="24" :sm="9" :md="9">
         <the-resource-tree
           ref="tree"
           @nodeClick="onNodeClick"
           @nodeAdd="onNodeAdd"
           @nodeDel="onNodeDel"
-          @nodeAddApi="onNodeAddApi"
         ></the-resource-tree>
       </el-col>
-      <el-col :xs="24" :sm="10" :md="12">
+      <el-col :xs="24" :sm="9" :md="9">
         <the-resource-form
           ref="form"
+          @formReset="onFormReset"
           @formSubmit="onFormSubmit"
         ></the-resource-form>
+      </el-col>
+      <el-col :xs="24" :sm="6" :md="6">
+        <the-resource-api-tree
+          ref="apiTree"
+          @updateApi="onUpdateApi"
+        ></the-resource-api-tree>
       </el-col>
     </el-row>
   </el-card>
@@ -23,12 +29,14 @@
 <script>
 import TheResourceTree from './TheResourceTree'
 import TheResourceForm from './TheResourceForm'
+import TheResourceApiTree from './TheResourceApiTree'
 
 export default {
   name: 'resource',
   components: {
     TheResourceTree,
-    TheResourceForm
+    TheResourceForm,
+    TheResourceApiTree,
   },
   data() {
     return {}
@@ -38,6 +46,7 @@ export default {
   methods: {
     onNodeClick(formData) {
       this.$refs.form.onNodeClick(formData)
+      this.$refs.apiTree.onNodeClick(formData)
     },
     onNodeAdd(parentId) {
       this.$refs.form.onNodeAdd(parentId)
@@ -48,13 +57,18 @@ export default {
     onNodeAddApi() {
       debugger
     },
+    onFormReset(parentId) {
+      this.$refs.apiTree.onFormReset()
+    },
     onFormSubmit(parentId) {
       this.$refs.tree.onFormSubmit(parentId)
+    },
+    onUpdateApi(resourceId, apiIdList) {
+      this.$refs.tree.onUpdateApi(resourceId, apiIdList)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="formData" :rules="rules" ref="form" label-width="120px" v-loading="loading">
+  <el-form :model="formData" :rules="rules" ref="form" label-width="100px" v-loading="loading" class="form">
     <el-form-item label="是否启用">
       <el-switch v-model="formData.enable"></el-switch>
     </el-form-item>
@@ -14,7 +14,7 @@
       <el-input v-model="formData.name" clearable ref="nameInput" placeholder="如：用户管理"></el-input>
     </el-form-item>
     <el-form-item label="资源编码" prop="code">
-      <el-input v-model="formData.code" clearable placeholder="如：sys:add"></el-input>
+      <el-input v-model="formData.code" clearable placeholder="如：sys:add；前端根据该值判断是否显示菜单、按钮"></el-input>
     </el-form-item>
     <el-form-item label="排序" prop="seq">
       <el-input type="number" min="0" v-model="formData.seq" clearable></el-input>
@@ -49,7 +49,8 @@ export default {
         remark: '',
         seq: '',
         clientType: 1,
-        enable: true
+        enable: true,
+        apiIdList: []
       },
       rules: {
         type: [
@@ -74,7 +75,9 @@ export default {
       this.$refs.form.resetFields()
       this.formData.id = ''
       this.formData.parentId = '0'
+      this.formData.clientType = 1
       this.$refs.nameInput.focus()
+      this.$emit('formReset')
     },
     submit() {
       this.$refs.form.validate(valid => {
@@ -91,17 +94,19 @@ export default {
         }
       })
     },
-    onNodeClick(data) {
-      this.formData = data
+    onNodeClick(formData) {
+      this.formData = formData
     },
     onNodeAdd(parentId) {
       this.reset()
       this.formData.parentId = parentId
-    },
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.form {
+  padding-right: 30px;
+}
 </style>
