@@ -1,11 +1,10 @@
 import Vue from 'vue'
-
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.scss' // global css
-
 import App from '@/App.vue'
 import router from '@/route'
+import * as filters from './filters'
 import utils from '@/providers/utils'
 import http from '@/providers/http'
 import helper from '@/providers/helper'
@@ -19,6 +18,10 @@ Vue.prototype.$helper = helper
 Vue.prototype.$globalData = globalData
 
 Vue.config.productionTip = false
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 Vue.use(ElementUI)
 Vue.use(AkmSelect)

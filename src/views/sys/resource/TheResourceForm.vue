@@ -5,29 +5,28 @@
     </el-form-item>
     <el-form-item label="资源类型" prop="type">
       <akm-select
-        :data="resourceType"
+        :data="resourceTypeList"
         :value.sync="formData.type"
+        size="medium"
         placeholder="请选择资源类型"
       ></akm-select>
     </el-form-item>
     <el-form-item label="资源名称" prop="name">
-      <el-input v-model="formData.name" clearable ref="nameInput" placeholder="如：用户管理"></el-input>
+      <el-input v-model="formData.name" clearable ref="nameInput" placeholder="如：用户管理" size="medium"></el-input>
     </el-form-item>
     <el-form-item label="资源编码" prop="code">
-      <el-input v-model="formData.code" clearable placeholder="如：sys:add；前端根据该值判断是否显示菜单、按钮"></el-input>
+      <el-input v-model="formData.code" clearable placeholder="如：sys:add；前端根据该值判断是否显示菜单、按钮" size="medium"></el-input>
     </el-form-item>
     <el-form-item label="排序" prop="seq">
-      <el-input type="number" min="0" v-model="formData.seq" clearable></el-input>
+      <el-input type="number" min="0" v-model="formData.seq" clearable size="medium"></el-input>
     </el-form-item>
     <el-form-item label="备注" prop="remark">
-      <el-input type="textarea" v-model="formData.remark" clearable></el-input>
+      <el-input type="textarea" autosize v-model="formData.remark" clearable size="medium"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit" size="small">
-        <span v-if="formData.id">编辑</span>
-        <span v-else>新增</span>
-      </el-button>
-      <el-button @click="reset" size="small">重置</el-button>
+      <el-button v-show="!formData.id" type="primary" @click="submit" size="medium">新增</el-button>
+      <el-button v-show="formData.id" type="success" @click="submit" size="medium">编辑</el-button>
+      <el-button @click="reset" size="medium">重置</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -35,10 +34,20 @@
 <script>
 export default {
   name: 'TheResourceForm',
+  watch: {
+    clientType() {
+      this.reset()
+    }
+  },
+  props: {
+    clientType: {
+      type: String
+    }
+  },
   data() {
     return {
       loading: false,
-      resourceType: [],
+      resourceTypeList: [],
 
       formData: {
         id: '',
@@ -48,7 +57,7 @@ export default {
         code: '',
         remark: '',
         seq: '',
-        clientType: 1,
+        clientType: this.clientType,
         enable: true,
         apiIdList: []
       },
@@ -67,7 +76,7 @@ export default {
   },
   created() {
     this.$helper.fetchDictData('resource_type').then(res => {
-      this.resourceType = res
+      this.resourceTypeList = res
     })
   },
   methods: {
@@ -75,7 +84,7 @@ export default {
       this.$refs.form.resetFields()
       this.formData.id = ''
       this.formData.parentId = '0'
-      this.formData.clientType = 1
+      this.formData.clientType = this.clientType
       this.$refs.nameInput.focus()
       this.$emit('formReset')
     },

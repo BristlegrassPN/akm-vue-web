@@ -7,6 +7,7 @@
     :placeholder="placeholder"
     @change="handleChange"
     :disabled="disabled"
+    :size="size"
   >
     <el-option
       v-for="(item, index) in data"
@@ -19,7 +20,7 @@
 <script>
 export default {
   name: 'akm-select',
-  props: ['value', 'placeholder', 'data', 'disabled'],
+  props: ['value', 'placeholder', 'data', 'disabled', 'size'],
   methods: {
     handleChange(value) {
       this.$emit('update:value', value)

@@ -46,12 +46,22 @@
 export default {
   name: 'TheResourceTree',
   watch: {
+    clientType() {
+      this.initTree()
+    },
     filterText(val) {
       this.$refs.tree.filter(val)
     }
   },
+  props: {
+    clientType: {
+      type: String
+    }
+  },
   data() {
     return {
+      list: [],
+
       filterText: '',
 
       treeData: [],
@@ -71,9 +81,14 @@ export default {
   methods: {
     fetchTreeData() {
       this.$http.post('/sys/resource/view/findAll').then(list => {
-        this.treeData = this.buildTree('0', list)
-        this.defaultExpandedKeys = this.expandedKeys
+        this.list = list
+        this.initTree()
       })
+    },
+    initTree() {
+      let list = this.list.filter(item => item.clientType === this.clientType)
+      this.treeData = this.buildTree('0', list)
+      this.defaultExpandedKeys = this.expandedKeys
     },
     buildTree(parentId, list) {
       let nodes = this.getChildren(parentId, list)

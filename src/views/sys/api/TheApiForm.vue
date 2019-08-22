@@ -13,11 +13,9 @@
       <el-input type="textarea" v-model="formData.remark" clearable></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit" size="small">
-        <span v-if="formData.id">编辑</span>
-        <span v-else>新增</span>
-      </el-button>
-      <el-button @click="reset" size="small">重置</el-button>
+      <el-button v-show="!formData.id" type="primary" @click="submit" size="medium">新增</el-button>
+      <el-button v-show="formData.id" type="success" @click="submit" size="medium">编辑</el-button>
+      <el-button @click="reset" size="medium">重置</el-button>
     </el-form-item>
   </el-form>
 </template>

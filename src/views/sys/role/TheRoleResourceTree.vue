@@ -1,14 +1,13 @@
 <template>
   <div v-loading="loading">
-    <div>分配Api<span v-show="formData.id">【{{formData.name}}】</span></div>
+    <div>分配资源<span v-show="formData.id">【{{formData.name}}】</span></div>
     <el-input
       class="filter-input"
-      placeholder="根据Api名称和地址过滤"
+      placeholder="根据资源名称和资源编码过滤"
       size="small"
       v-model="filterText">
     </el-input>
     <el-tree
-      v-show="show"
       ref="tree"
       :props="treeProps"
       :data="treeData"
@@ -26,19 +25,29 @@
 
 <script>
 export default {
-  name: 'TheResourceApiTree',
+  name: 'TheRoleResourceTree',
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val)
+    },
+    formData() {
+      this.collapseAll()
+      this.$refs.tree.setCheckedKeys(this.formData.resourceIdList)
+      this.defaultExpandedKeys = this.formData.resourceIdList
+    }
+  },
+  props: {
+    formData: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   data() {
     return {
-      show: false,
       loading: false,
       filterText: '',
-
-      formData: {},
 
       defaultExpandedKeys: [],
       treeData: [],
@@ -53,7 +62,7 @@ export default {
   },
   methods: {
     fetchTreeData() {
-      this.$http.post('/sys/api/view/findAll').then(list => {
+      this.$http.post('/sys/resource/view/findAll').then(list => {
         this.treeData = this.buildTree('0', list)
       })
     },
@@ -69,12 +78,12 @@ export default {
       return list.filter(item => item.parentId === parentId)
     },
     onCheck(data, checked) {
-      let apiIdList = checked.checkedKeys
+      let resourceIdList = checked.checkedKeys
       this.loading = true
-      this.$http.post(`/sys/resource/op/updateApi?resourceId=${this.formData.id}`, apiIdList).then(() => {
+      this.$http.post(`/sys/role/op/updateResource?roleId=${this.formData.id}`, resourceIdList).then(() => {
         this.loading = false
         this.$helper.successMessage()
-        this.$emit('updateApi', this.formData.id, apiIdList)
+        this.$emit('update-resource', this.formData.id, resourceIdList)
       }).catch(() => {
         this.$helper.errorMessage()
         this.loading = false
@@ -87,18 +96,10 @@ export default {
       if (!value) return true
       return data.name.indexOf(value) !== -1 || data.uri.indexOf(value) !== -1
     },
-    onNodeClick(formData) {
-      this.formData = formData
-      this.collapseAll()
-      this.show = true
-      this.$refs.tree.setCheckedKeys(formData.apiIdList)
-      this.defaultExpandedKeys = formData.apiIdList
-    },
     reset() {
       this.$refs.tree.setCheckedKeys([])
       this.defaultExpandedKeys = []
       this.collapseAll()
-      this.show = false
     },
   }
 }

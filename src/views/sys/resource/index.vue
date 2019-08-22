@@ -1,29 +1,39 @@
 <template>
-  <el-card shadow="hover">
+  <div class="page-resource">
+    <el-tabs v-model="activeTabName" type="card" @tab-click="onTabClick">
+      <el-tab-pane
+        v-for="(item, index) in clientTypeList"
+        :key="index"
+        :label="item.label"
+        :name="item.value">
+      </el-tab-pane>
+    </el-tabs>
     <el-row>
-      <el-col :xs="24" :sm="9" :md="9">
+      <el-col :xs="24" :sm="8" class="resource-item">
         <the-resource-tree
           ref="tree"
+          :clientType="clientType"
           @nodeClick="onNodeClick"
           @nodeAdd="onNodeAdd"
           @nodeDel="onNodeDel"
         ></the-resource-tree>
       </el-col>
-      <el-col :xs="24" :sm="9" :md="9">
+      <el-col :xs="24" :sm="8" class="resource-item form-warp">
         <the-resource-form
           ref="form"
+          :clientType="clientType"
           @formReset="onFormReset"
           @formSubmit="onFormSubmit"
         ></the-resource-form>
       </el-col>
-      <el-col :xs="24" :sm="6" :md="6">
+      <el-col :xs="24" :sm="8" class="resource-item">
         <the-resource-api-tree
           ref="apiTree"
           @updateApi="onUpdateApi"
         ></the-resource-api-tree>
       </el-col>
     </el-row>
-  </el-card>
+  </div>
 </template>
 
 <script>
@@ -39,11 +49,25 @@ export default {
     TheResourceApiTree,
   },
   data() {
-    return {}
+    return {
+      activeTabName: '1',
+      clientType: 1,
+      clientTypeList: []
+    }
   },
   created() {
+    this.$helper.fetchDictData('client_type').then(res => {
+      res.forEach(item => {
+        item.value = String(item.value)
+      })
+      this.clientTypeList = res
+    })
   },
   methods: {
+    onTabClick() {
+      this.clientType = Number(this.activeTabName)
+      this.$refs.apiTree.reset()
+    },
     onNodeClick(formData) {
       this.$refs.form.onNodeClick(formData)
       this.$refs.apiTree.onNodeClick(formData)
@@ -54,11 +78,8 @@ export default {
     onNodeDel() {
       this.$refs.form.reset()
     },
-    onNodeAddApi() {
-      debugger
-    },
-    onFormReset(parentId) {
-      this.$refs.apiTree.onFormReset()
+    onFormReset() {
+      this.$refs.apiTree.reset()
     },
     onFormSubmit(parentId) {
       this.$refs.tree.onFormSubmit(parentId)
@@ -71,4 +92,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.resource-item{
+  padding: 16px;
+}
+.form-warp {
+  border-left: 1px solid #DCDFE6;
+  border-right: 1px solid #DCDFE6;
+}
+</style>
+<style lang="scss">
+.page-resource {
+  background: #fff;
+  .el-tabs__header {
+    margin: 0;
+  }
+}
 </style>

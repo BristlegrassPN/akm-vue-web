@@ -14,8 +14,8 @@
         <el-form-item label="字典类型名称" prop="typeName">
           <el-input v-model="condition.typeName" clearable></el-input>
         </el-form-item>
-        <el-button type="primary" @click="query">查询</el-button>
-        <el-button type="warning" @click="reset">清空查询条件</el-button>
+        <el-button type="primary" @click="query" size="medium">查询</el-button>
+        <el-button type="warning" @click="reset" size="medium">清空查询条件</el-button>
       </el-form>
     </el-card>
     <el-card shadow="hover">
@@ -24,8 +24,8 @@
         <el-button type="danger" size="medium" :disabled="!selectedList.length">删除</el-button>
       </div>
       <the-dict-table
-        @selection-change="onSelectionChange"
         :data="tableData"
+        @selection-change="onSelectionChange"
       ></the-dict-table>
       <div class="block">
         <el-pagination
