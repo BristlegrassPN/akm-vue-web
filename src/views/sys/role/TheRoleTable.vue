@@ -1,55 +1,64 @@
 <template>
-  <div>
-    <el-table
-      ref="table"
-      :data="data"
-      highlight-current-row
-      @current-change="onCurrentChange">
-      <el-table-column
-        width="120"
-        prop="name"
-        label="角色名称">
-      </el-table-column>
-      <el-table-column
-        prop="remark"
-        label="备注">
-      </el-table-column>
-      <el-table-column
-        width="60"
-        prop="seq"
-        label="排序">
-      </el-table-column>
-      <el-table-column
-        width="80"
-        prop="enable"
-        label="启用状态">
-        <template slot-scope="scope">
-          {{scope.row.resourceIdList.length}}
-          <el-switch :value="scope.row.enable"></el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column
-        width="120"
-        prop="clientType"
-        label="角色分类">
-        <template slot-scope="scope">
-          {{scope.row.clientType | translateDictValue(clientTypeList)}}
-        </template>
-      </el-table-column>
-      <el-table-column
-        width="180"
-        class-name="akm-no-padding"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button type="text" style="color: #f56c6c" @click="del(scope.row,$event)">删除</el-button>
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="edit(scope.row,$event)">编辑</el-button>
-          <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="set(scope.row,$event)">分配权限</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+  <el-table
+    ref="table"
+    :data="data"
+    highlight-current-row
+    @current-change="onCurrentChange">
+    <el-table-column
+      width="120"
+      prop="name"
+      label="角色名称">
+    </el-table-column>
+    <el-table-column
+      prop="remark"
+      label="备注">
+    </el-table-column>
+    <el-table-column
+      width="60"
+      prop="seq"
+      label="排序">
+    </el-table-column>
+    <el-table-column
+      width="80"
+      prop="enable"
+      label="启用状态">
+      <template slot-scope="scope">
+        {{scope.row.resourceIdList.length}}
+        <el-switch :value="scope.row.enable"></el-switch>
+      </template>
+    </el-table-column>
+    <el-table-column
+      width="120"
+      prop="clientType"
+      label="角色分类">
+      <template slot-scope="scope">
+        {{scope.row.clientType | translateDictValue(clientTypeList)}}
+      </template>
+    </el-table-column>
+    <el-table-column
+      width="180"
+      class-name="akm-no-padding"
+      label="操作">
+      <template slot-scope="scope">
+        <el-popover
+          placement="top"
+          width="160"
+          v-model="scope.row.visible">
+          <p><i class="el-icon-question icon-question"></i>确定删除吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" @click="scope.row.visible = false">取消</el-button>
+            <el-button type="primary" size="mini" @click="del(scope.row,$event)">确定</el-button>
+          </div>
+          <el-button type="text" slot="reference" style="color: #f56c6c" @click="$event.stopPropagation()">删除
+          </el-button>
+        </el-popover>
+        <el-divider direction="vertical"></el-divider>
+        <el-button type="text" @click="edit(scope.row,$event)">编辑</el-button>
+        <el-divider direction="vertical"></el-divider>
+        <el-button type="text" @click="set(scope.row,$event)">分配权限</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script>
@@ -79,10 +88,7 @@ export default {
     },
     del(val, event) {
       event.stopPropagation()
-      this.$helper.warningConfirm('确定删除吗？').then(() => {
-        this.$emit('del-row', val)
-      }).catch(() => {
-      })
+      this.$emit('del-row', val)
     },
     edit(val, event) {
       event.stopPropagation()
@@ -100,5 +106,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.icon-question {
+  color: #e6a23c;
+  font-size: 16px;
+  margin-right: 4px;
+}
 
 </style>

@@ -74,7 +74,7 @@ export default {
       })
     },
     onCurrentChange(data) {
-      data && (this.formData = data)
+      data && (this.formData = this.$utils.clone(data))
     },
     onDelRow(data) {
       this.$http.del('/sys/role/op/batchDel', [data.id]).then(() => {
@@ -84,11 +84,11 @@ export default {
     },
     onEditRow(data) {
       this.formShow = true
-      this.formData = data
+      this.formData = this.$utils.clone(data)
     },
     onSetResource(data) {
       this.formShow = false
-      this.formData = data
+      this.formData = this.$utils.clone(data)
     },
     reset() {
       this.formData = {
@@ -116,7 +116,7 @@ export default {
       })
     },
     onUpdateResource(roleId, resourceIdList) {
-      this.tableData.find(item => item.id = roleId).resourceIdList = resourceIdList
+      this.tableData.find(item => item.id === roleId).resourceIdList = resourceIdList
       this.tableData.forEach((item, index) => {
         if (item.id === roleId) {
           item.resourceIdList = resourceIdList

@@ -7,7 +7,6 @@
           @nodeClick="onNodeClick"
           @nodeAdd="onNodeAdd"
           @nodeDel="onNodeDel"
-          @nodeAddApi="onNodeAddApi"
         ></the-api-tree>
       </el-col>
       <el-col :xs="24" :sm="10" :md="12">
@@ -44,9 +43,6 @@ export default {
     },
     onNodeDel() {
       this.$refs.form.reset()
-    },
-    onNodeAddApi() {
-      debugger
     },
     onFormSubmit(parentId) {
       this.$refs.tree.onFormSubmit(parentId)

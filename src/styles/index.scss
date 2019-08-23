@@ -34,3 +34,8 @@ body {
     height: 0;
   }
 }
+
+
+.el-popper[x-placement^=top], .el-popper[x-placement^=bottom] {
+  margin: 0;
+}
