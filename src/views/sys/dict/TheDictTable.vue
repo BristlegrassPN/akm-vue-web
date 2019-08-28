@@ -35,8 +35,7 @@
         class-name="akm-no-padding"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text">查看</el-button>
-          <el-button type="text">编辑</el-button>
+          <el-button type="text" @click="edit(scope.row,$event)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,11 +60,11 @@ export default {
   methods: {
     onSelectionChange(val) {
       this.$emit('selection-change', val)
-    }
+    },
+    edit(val, event) {
+      event.stopPropagation()
+      // this.$emit('edit-row', val)
+    },
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
