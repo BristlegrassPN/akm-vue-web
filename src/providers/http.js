@@ -4,17 +4,9 @@
 import axios from 'axios'
 
 import util from '@/providers/utils'
+import helper from '@/providers/helper'
 import globalData from '@/providers/globalData'
 
-let REQUEST_NUMBER = 0
-
-const showLoading = function (config) {
-  ++REQUEST_NUMBER
-  // config.showLoading && helper.showLoading()
-}
-const hideLoading = function () {
-  // --REQUEST_NUMBER === 0 && helper.hideLoading()
-}
 /**
  *  统一参数
  *  异常处理
@@ -37,19 +29,24 @@ const request = function (config) {
       return Promise.resolve(data)
     }
   }
-  showLoading(config)
   if (globalData.token) { //  添加请求头
     config.headers = { 'Authorization': `Bearer ${globalData.token}`, ...config.headers }
   }
   return axiosBaseInstance.request(config).then(res => {
-    hideLoading()
     let data = res.data
     if (config.cacheData) { // 如果需要缓存，保存数据到sessionStorage中
       util.sessionStorage.set(JSON.stringify(config), data)
     }
     return Promise.resolve(data)
   }, err => {
-    hideLoading()
+    let response = err.response
+    // 510是和后台约定的业务异常 BusinessException
+    if (response.status === 510) {
+      // response.data.code默认为0为具体的业务异常，和后台约定
+      if (response.data.msg) {
+        helper.alert(response.data.msg)
+      }
+    }
     return Promise.reject(err)
   })
 }

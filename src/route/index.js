@@ -6,6 +6,7 @@ import Main from '@/views/layout/Main'
 import Api from '@/views/sys/api'
 import Resource from '@/views/sys/resource'
 import Role from '@/views/sys/role'
+import User from '@/views/sys/user'
 import Dict from '@/views/sys/dict'
 
 Vue.use(VueRouter)
@@ -15,7 +16,7 @@ export default new VueRouter({
     {
       path: '/',
       name: 'test',
-      component: Role,
+      component: User,
     },
     {
       path: '/layout',
@@ -37,6 +38,10 @@ export default new VueRouter({
         {
           path: 'role',
           component: Role
+        },
+        {
+          path: 'user',
+          component: User
         },
         {
           path: 'dict',

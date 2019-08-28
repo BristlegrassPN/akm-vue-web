@@ -23,7 +23,6 @@
       prop="enable"
       label="启用状态">
       <template slot-scope="scope">
-        {{scope.row.resourceIdList.length}}
         <el-switch :value="scope.row.enable"></el-switch>
       </template>
     </el-table-column>
@@ -44,7 +43,7 @@
           placement="top"
           width="160"
           v-model="scope.row.visible">
-          <p><i class="el-icon-question icon-question"></i>确定删除吗？</p>
+          <p><i class="el-icon-question akm-del-icon-question"></i>确定删除吗？</p>
           <div style="text-align: right; margin: 0">
             <el-button size="mini" @click="scope.row.visible = false">取消</el-button>
             <el-button type="primary" size="mini" @click="del(scope.row,$event)">确定</el-button>
@@ -106,10 +105,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.icon-question {
-  color: #e6a23c;
-  font-size: 16px;
-  margin-right: 4px;
-}
+
 
 </style>

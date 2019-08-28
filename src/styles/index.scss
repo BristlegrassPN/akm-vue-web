@@ -24,7 +24,8 @@ body {
   text-align: left;
 }
 
-.clearfix {
+// 清除浮动
+.akm-clear-fix {
   &:after {
     visibility: hidden;
     display: block;
@@ -35,7 +36,27 @@ body {
   }
 }
 
+/**
+  开始-和业务有关的全局样式
+ */
+//
+.akm-del-icon-question {
+  color: #e6a23c;
+  font-size: 16px;
+  margin-right: 4px;
+}
 
+/**
+  结束-和业务有关的全局样式
+ */
+/**
+  开始-覆盖element-ui样式
+ */
+//
 .el-popper[x-placement^=top], .el-popper[x-placement^=bottom] {
   margin: 0;
 }
+
+/**
+  结束-覆盖element-ui样式
+ */

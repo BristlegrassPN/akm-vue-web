@@ -5,7 +5,7 @@
       @selection-change="onSelectionChange">
       <el-table-column
         type="selection"
-        width="55">
+        width="40">
       </el-table-column>
       <el-table-column
         prop="type"

@@ -80,7 +80,7 @@ export default {
     onCheck(data, checked) {
       let resourceIdList = checked.checkedKeys
       this.loading = true
-      this.$http.post(`/sys/role/op/updateResource?roleId=${this.formData.id}`, resourceIdList).then(() => {
+      this.$http.post(`/sys/role/op/updateResourceByRoleId?roleId=${this.formData.id}`, resourceIdList).then(() => {
         this.loading = false
         this.$helper.successMessage()
         this.$emit('update-resource', this.formData.id, resourceIdList)

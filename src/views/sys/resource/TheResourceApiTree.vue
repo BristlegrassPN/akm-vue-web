@@ -71,7 +71,7 @@ export default {
     onCheck(data, checked) {
       let apiIdList = checked.checkedKeys
       this.loading = true
-      this.$http.post(`/sys/resource/op/updateApi?resourceId=${this.formData.id}`, apiIdList).then(() => {
+      this.$http.post(`/sys/resource/op/updateApiByResourceId?resourceId=${this.formData.id}`, apiIdList).then(() => {
         this.loading = false
         this.$helper.successMessage()
         this.$emit('updateApi', this.formData.id, apiIdList)

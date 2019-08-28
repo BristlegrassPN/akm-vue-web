@@ -21,17 +21,11 @@
 </template>
 
 <script>
+import { elementValidator } from '@/providers/validate'
+
 export default {
   name: 'TheApiForm',
   data() {
-    const validateUri = (rule, value, callback) => {
-      const reg = /^[a-zA-Z0-9_\-\*\/]+$/
-      if (reg.test(value)) {
-        callback()
-      } else {
-        callback(new Error('接口uri输入不合法'))
-      }
-    }
     return {
       loading: false,
 
@@ -49,7 +43,7 @@ export default {
         ],
         uri: [
           { required: true, message: '请输入接口uri', trigger: 'change' },
-          { validator: validateUri, trigger: 'change' }
+          { validator: elementValidator(/^[a-zA-Z0-9_\-\*\/]+$/, '接口uri输入不合法'), trigger: 'change' }
         ]
       },
     }
