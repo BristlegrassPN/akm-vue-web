@@ -8,22 +8,18 @@
         width="40">
       </el-table-column>
       <el-table-column
-        width="120"
         prop="username"
         label="用户名">
       </el-table-column>
       <el-table-column
-        width="80"
         prop="name"
         label="用户姓名">
       </el-table-column>
       <el-table-column
-        width="120"
         prop="phone"
         label="手机号码">
       </el-table-column>
       <el-table-column
-        width="80"
         align="center"
         prop="enable"
         label="是否启用">
@@ -32,7 +28,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        width="140"
         prop="expiredTime"
         label="账号过期时间">
         <template slot-scope="scope">
@@ -45,7 +40,6 @@
         <template slot-scope="scope">
           <el-popover
             placement="top"
-            width="160"
             v-model="scope.row.visible">
             <p><i class="el-icon-question akm-del-icon-question"></i>确定删除吗？</p>
             <div style="text-align: right; margin: 0">
@@ -56,12 +50,29 @@
             </el-button>
           </el-popover>
           <el-divider direction="vertical"></el-divider>
-          <el-button type="text" @click="set(scope.row,$event)">重置密码</el-button>
+          <el-button type="text" @click="updatePassword(scope.row,$event)">重置密码</el-button>
           <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="edit(scope.row,$event)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog
+      :title="dialog.title"
+      :visible.sync="dialog.visible"
+      width="500px">
+      <el-form
+        label-width="100px"
+      >
+        <el-form-item label="请输入新密码">
+          <el-input v-model="password" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="akm-text-right">
+        <el-button @click="dialog.visible = false">取 消</el-button>
+        <el-button type="primary" @click="submit" :loading="loading">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -77,7 +88,15 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      loading: false,
+      dialog: {
+        title: '重置密码',
+        visible: false,
+      },
+      password: '123456',
+      userId: '',
+    }
   },
   created() {
   },
@@ -90,10 +109,20 @@ export default {
       event.stopPropagation()
       this.$emit('edit-row', val)
     },
-    set(val, event) {
+    updatePassword(val, event) {
       event.stopPropagation()
-      this.$emit('set-resource', val)
+      this.userId = val.id
+      this.dialog.visible = true
     },
+    submit() {
+      this.$http.postQueryString('/sys/user/op/updatePassword', {
+        id: this.userId,
+        newPassword: this.password
+      }).then(() => {
+        this.dialog.visible = false
+        this.$helper.successMessage('密码重置成功')
+      })
+    }
   }
 }
 </script>
