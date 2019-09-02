@@ -28,6 +28,13 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="roleList"
+        label="拥有角色">
+        <template slot-scope="scope">
+          {{scope.row.roleList|listToString()}}
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="expiredTime"
         label="账号过期时间">
         <template slot-scope="scope">

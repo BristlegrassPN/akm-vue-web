@@ -7,15 +7,14 @@
         ref="form"
         label-width="120px"
         @keydown.enter.native="query"
+        @submit.native.prevent
       >
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="condition.username"></el-input>
-        </el-form-item>
-        <el-form-item label="用户姓名" prop="name">
-          <el-input v-model="condition.name"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="condition.phone"></el-input>
+        <el-form-item label="" prop="searchContent">
+          <el-input
+            style="width: 300px"
+            v-model="condition.searchContent"
+            placeholder="根据用户名、姓名、手机号码模糊搜索"
+          ></el-input>
         </el-form-item>
         <el-button type="primary" @click="query" size="medium">查询</el-button>
         <el-button type="warning" @click="reset" size="medium">清空查询条件</el-button>
@@ -78,9 +77,7 @@ export default {
       },
 
       condition: {
-        username: '',
-        name: '',
-        phone: '',
+        searchContent: '',
       },
 
       dialog: {
@@ -116,8 +113,7 @@ export default {
     },
     fetchTableData() {
       this.$http.post('/sys/user/view/findPage', {
-        ...this.pagination,
-        condition: this.condition
+        ...this.pagination
       }).then(res => {
         this.tableData = res.list
         this.pagination.total = res.total

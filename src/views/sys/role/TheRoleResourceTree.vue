@@ -16,7 +16,7 @@
       :default-expanded-keys="defaultExpandedKeys"
       :filter-node-method="filterNode"
       @check="onCheck">
-      <div class="custom-tree-node" slot-scope="{ node, data }">
+      <div class="custom-tree-node" slot-scope="{ node }">
         <div> {{ node.label }}</div>
       </div>
     </el-tree>

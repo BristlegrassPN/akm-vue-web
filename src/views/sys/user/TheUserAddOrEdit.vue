@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     fetchAllRole() {
-      this.$http.post(`/sys/role/view/find?enable=true`).then(res => {
+      this.$http.post(`/sys/role/view/findAll?enable=true`).then(res => {
         let roleGroup = []
         res.forEach(item => {
           let group = roleGroup.find(group => group.value === item.clientType)

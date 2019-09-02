@@ -55,7 +55,7 @@ export default {
   },
   props: {
     clientType: {
-      type: String
+      type: Number
     }
   },
   data() {

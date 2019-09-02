@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import layout from '@/views/layout/index'
+import Layout from '@/views/layout/index'
 import pageNotFound from '@/views/404'
 import Main from '@/views/layout/Main'
 import Api from '@/views/sys/api'
@@ -15,13 +15,14 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'test',
-      component: User,
+      name: '',
+      // component: Layout,
+      redirect: '/layout',
     },
     {
       path: '/layout',
       name: 'layout',
-      component: layout,
+      component: Layout,
       children: [
         {
           path: '',

@@ -11,11 +11,23 @@
         placeholder="请选择资源类型"
       ></akm-select>
     </el-form-item>
-    <el-form-item label="资源名称" prop="name">
+    <el-form-item :label="formData.type | translateDictValue(resourceTypeList)+'名称'" prop="name">
       <el-input v-model="formData.name" clearable ref="nameInput" placeholder="如：用户管理" size="medium"></el-input>
     </el-form-item>
-    <el-form-item label="资源编码" prop="code">
-      <el-input v-model="formData.code" clearable placeholder="如：sys:add；前端根据该值判断是否显示菜单、按钮" size="medium"></el-input>
+    <!--菜单必填uri-->
+    <el-form-item :label="formData.type | translateDictValue(resourceTypeList)+'uri'" prop="uri"
+                  v-if="formData.type===2">
+      <el-input v-model="formData.uri" clearable placeholder="如：/layout/user；前端根据该值跳转页面"
+                size="medium"></el-input>
+    </el-form-item>
+    <!--按钮必填code-->
+    <el-form-item :label="formData.type | translateDictValue(resourceTypeList)+'编码'" prop="code"
+                  v-if="formData.type===3">
+      <el-input v-model="formData.code" clearable placeholder="如：sys_user_add；前端根据该值判断是否显示按钮"
+                size="medium"></el-input>
+    </el-form-item>
+    <el-form-item label="图标类名" prop="icon">
+      <el-input v-model="formData.icon" clearable size="medium"></el-input>
     </el-form-item>
     <el-form-item label="排序" prop="seq">
       <el-input type="number" min="0" v-model="formData.seq" clearable size="medium"></el-input>
@@ -41,7 +53,7 @@ export default {
   },
   props: {
     clientType: {
-      type: String
+      type: Number
     }
   },
   data() {
@@ -52,9 +64,11 @@ export default {
       formData: {
         id: '',
         parentId: '0',
-        type: 1,
+        type: 2,
         name: '',
+        uri: '',
         code: '',
+        icon: 'el-icon-star-on',
         remark: '',
         seq: '',
         clientType: this.clientType,
@@ -66,10 +80,13 @@ export default {
           { required: true, message: '请选择资源类型', trigger: 'change' }
         ],
         name: [
-          { required: true, message: '请选择资源类型', trigger: 'change' }
+          { required: true, message: '请输入资源name', trigger: 'change' }
+        ],
+        uri: [
+          { required: true, message: '请选择资源uri', trigger: 'change' }
         ],
         code: [
-          { required: true, message: '请选择资源类型', trigger: 'change' }
+          { required: true, message: '请输入资源编码', trigger: 'change' }
         ],
       },
     }

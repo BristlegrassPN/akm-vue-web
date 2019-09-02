@@ -133,12 +133,43 @@ const formatDateRange = (startDate, endDate) => {
   return start === end ? start : start + ' ~' + end
 }
 
-// 复制对象
+/**
+ * 复制对象
+ */
 const clone = (obj) => {
   if (obj && obj instanceof Object) {
     return JSON.parse(JSON.stringify(obj))
   }
   return obj
+}
+
+/**
+ * 把数组转为tree结构
+ */
+const listToTree = (list, parentId = '0', childrenProp = 'children') => {
+  let nodes = list.filter(item => item.parentId === parentId)
+  nodes.forEach(item => {
+    let childrenNodes = listToTree(list, item.id)
+    if (childrenNodes && childrenNodes.length) {
+      item[childrenProp] = childrenNodes
+    }
+  })
+  return nodes
+}
+
+/**
+ * 把树结构转为数组
+ */
+const treeToList = (tree, childrenProp = 'children') => {
+  let list = []
+  tree.forEach(item => {
+    list.push(item)
+    const childrenNodes = item[childrenProp]
+    if (childrenNodes && childrenNodes.length) {
+      list = [...list, ...treeToList(childrenNodes, childrenProp)]
+    }
+  })
+  return list
 }
 
 export default {
@@ -148,5 +179,7 @@ export default {
   formatDate,
   formatDateRange,
   fileSize,
-  clone
+  clone,
+  listToTree,
+  treeToList,
 }

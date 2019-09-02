@@ -11,6 +11,7 @@ import helper from '@/providers/helper'
 import globalData from '@/providers/globalData'
 
 import AkmSelect from '@/views/components/akm-select'
+import AkmEditor from '@/views/components/akm-editor'
 
 Vue.prototype.$utils = utils
 Vue.prototype.$http = http
@@ -25,6 +26,7 @@ Object.keys(filters).forEach(key => {
 
 Vue.use(ElementUI)
 Vue.use(AkmSelect)
+Vue.use(AkmEditor)
 
 const vue = new Vue({
   router,
