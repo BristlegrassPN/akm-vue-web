@@ -30,7 +30,7 @@ const request = function (config) {
     }
   }
   if (globalData.token) { //  添加请求头
-    config.headers = { 'Authorization': `Bearer ${globalData.token}`, ...config.headers }
+    config.headers = { 'Authorization': `${globalData.token}`, ...config.headers }
   }
   return axiosBaseInstance.request(config).then(res => {
     let data = res.data
