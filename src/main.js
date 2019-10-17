@@ -6,7 +6,7 @@ import App from '@/App.vue'
 import router from '@/route'
 import * as filters from './filters'
 import utils from '@/providers/utils'
-import http from '@/providers/http'
+import http from '@/providers/http_axios'
 import helper from '@/providers/helper'
 import globalData from '@/providers/globalData'
 

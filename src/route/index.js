@@ -12,7 +12,7 @@ import Dict from '@/views/sys/dict'
 
 Vue.use(VueRouter)
 export default new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/',

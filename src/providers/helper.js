@@ -1,5 +1,4 @@
 import vue from '@/main'
-import http from '@/providers/http'
 
 /**
  * util:业务无关的工具方法
@@ -35,17 +34,23 @@ const warningConfirm = (message) => {
   })
 }
 
+let alertIsExist = false // 用户判断alert已经存在则不再弹出
 const alert = (message, title = '提示', callback) => {
+  if (alertIsExist) {
+    return
+  }
+  alertIsExist = true
   vue.$alert(message, title, {
     confirmButtonText: '确定',
     callback: () => {
+      alertIsExist = false
       callback && callback()
     }
   })
 }
 
 const fetchDictData = (type) => {
-  return http.postQueryString('/sys/dict/view/findByType', { type }, { cacheData: true })
+  return this.$http.postQueryString('/sys/dict/view/findByType', { type }, { cacheData: true })
 }
 
 export default {

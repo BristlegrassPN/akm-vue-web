@@ -64,7 +64,8 @@
       </el-menu>
     </div>
     <el-container>
-      <el-header>
+      <el-header class="header">
+        <el-button type="text" icon="el-icon-s-unfold" @click="logout">退出</el-button>
       </el-header>
       <el-main>
         <router-view></router-view>
@@ -91,7 +92,7 @@ export default {
   },
   methods: {
     fetchMenuData() {
-      this.$http.post('/sys/resource/view/findMenuResource').then(list => {
+      this.$http.post('/sys/resource/public/findResource').then(list => {
         list = list.filter(item => item.type === 1 || item.type === 2) // 保留目录和菜单
         this.menus = this.$utils.listToTree(list)
       })
@@ -101,6 +102,9 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath)
+    },
+    logout(){
+      this.$router.push('/')
     }
   }
 }
@@ -112,6 +116,13 @@ export default {
   .el-header {
     padding-left: 0;
     background-color: #001529;
+    color: #fff;
+    height: 60px;
+    line-height: 60px;
+    text-align: right;
+    .el-button--text{
+      color: #fff;
+    }
   }
   .aside {
     background-color: #001529;

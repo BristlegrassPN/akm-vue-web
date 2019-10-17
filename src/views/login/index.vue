@@ -23,8 +23,9 @@ export default {
   data() {
     return {
       form: {
-        username: '',
-        password: '',
+        username: 'project',
+        password: '123456',
+        clientType: 1
       },
       rules: {
         username: [
@@ -43,7 +44,16 @@ export default {
     submit() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.$http.post('/sys/user/open/login', this.form).then(res => {
+            this.$globalData.token = res.token
+            this.$globalData.name = res.name
+            this.$globalData.currentRoleId = res.currentRoleId
+            this.$globalData.roleList = res.roleList
+            this.$router.push('/layout')
+          })
+          // this.$http.del('/sys/resource/op/batchDel', [1]).then(res => {
+          //   debugger
+          // })
         } else {
           console.log('error submit!!')
           return false

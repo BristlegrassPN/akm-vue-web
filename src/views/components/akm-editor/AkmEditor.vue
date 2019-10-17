@@ -16,6 +16,7 @@ export default {
   },
   mounted() {
     this.editor = new E(this.$refs.editor)
+    this.editor.customConfig.zIndex = 1
     // 自定义菜单配置
     this.editor.customConfig.menus = [
       'head',  // 标题

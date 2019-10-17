@@ -1,8 +1,7 @@
 /**
  * http
  */
-import axios from 'axios'
-
+let fly = require('flyio')
 import util from '@/providers/utils'
 import helper from '@/providers/helper'
 import globalData from '@/providers/globalData'
@@ -14,97 +13,77 @@ import globalData from '@/providers/globalData'
  *  添加请求头
  *  请求数据缓存
  */
+// https://wendux.github.io/dist/#/doc/flyio/interceptor
+fly.config.baseURL = process.env.VUE_APP_BASE_API
+fly.config.timeout = 10000
+fly.config.responseType = 'json'
 
-// https://www.kancloud.cn/yunye/axios/234845
-const axiosBaseInstance = axios.create({
-  baseURL: 'http://localhost:8989/',
-  timeout: 10000,
-  responseType: 'json'
-})
-
-const request = function (config) {
-  if (config.cacheData) { // 如果需要缓存，先尝试从sessionStorage中取数据
-    let data = util.sessionStorage.get(JSON.stringify(config))
+//添加请求拦截器
+fly.interceptors.request.use((request) => {
+  if (request.cacheData) { // 如果需要缓存，先尝试从sessionStorage中取数据
+    let data = util.sessionStorage.get(getCacheKey(request))
     if (data) {
       return Promise.resolve(data)
     }
   }
-  if (globalData.token) { //  添加请求头
-    config.headers = { 'Authorization': `${globalData.token}`, ...config.headers }
+  if (globalData.token) { // 给所有请求添加自定义header
+    request.headers['Authorization'] = `${globalData.token}`
   }
-  return axiosBaseInstance.request(config).then(res => {
-    let data = res.data
-    if (config.cacheData) { // 如果需要缓存，保存数据到sessionStorage中
-      util.sessionStorage.set(JSON.stringify(config), data)
+  return request
+})
+
+// 添加响应拦截器，响应拦截器会在then/catch处理之前执行
+fly.interceptors.response.use(
+  ({ data, request }) => {
+    let result = data
+    if (data.code === 1) {
+      result = data.data
     }
-    return Promise.resolve(data)
-  }, err => {
-    let response = err.response
-    // 510是和后台约定的业务异常 BusinessException
-    if (response.status === 510) {
-      // response.data.code默认为0为具体的业务异常，和后台约定
-      if (response.data.msg) {
-        helper.alert(response.data.msg)
-      }
+    if (request.cacheData) { // 如果需要缓存，先尝试从sessionStorage中取数据
+      util.sessionStorage.set(getCacheKey(request), result)
     }
-    return Promise.reject(err)
-  })
+    return result
+  },
+  ({ response }) => {
+    if (response && response.status === 510) { // 510是和后台约定的业务异常 BusinessException
+      let responseData = response.data
+      responseData.msg && helper.alert(responseData.msg)
+      return responseData
+    } else {
+      return {} // 运行时异常或未知异常,返回给请求
+    }
+  }
+)
+
+const getCacheKey = (request) => {
+  return request.url + request.method + JSON.stringify(request.body) + JSON.stringify(request.params)
 }
 
-const get = function (url, data, config) {
-  return request({
-    method: 'GET',
-    url,
-    params: data,
-    ...config
-  })
+const get = (url, data, config) => {
+  return fly.get(url, data, config)
 }
 
-const del = function (url, data, config) {
-  return request({
-    method: 'DELETE',
-    url,
-    data: data,
+const del = (url, body, config) => {
+  debugger
+  return fly.delete(url, body)
+}
+
+const post = (url, body, config) => {
+  return fly.post(url, body, {
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    ...config
-  })
-}
-
-const post = (url, data, config) => {
-  return request({
-    method: 'POST',
-    url,
-    data,
-    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    ...config
-  })
-}
-
-const postFormData = (url, data, config) => {
-  return request({
-    method: 'POST',
-    url,
-    data,
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     ...config
   })
 }
 const postQueryString = (url, data, config) => {
-  return request({
-    method: 'POST',
-    url,
-    params: data,
+  return fly.post(url, data, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     ...config
   })
 }
-
 export default {
-  axiosBaseInstance,
-  request,
+  fly,
   get,
   del,
   post,
-  postFormData,
-  postQueryString,
+  postQueryString
 }
