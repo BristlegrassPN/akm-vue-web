@@ -1,4 +1,5 @@
 import vue from '@/main'
+import http from '@/providers/http_axios'
 
 /**
  * util:业务无关的工具方法
@@ -50,7 +51,7 @@ const alert = (message, title = '提示', callback) => {
 }
 
 const fetchDictData = (type) => {
-  return this.$http.postQueryString('/sys/dict/view/findByType', { type }, { cacheData: true })
+  return http.postQueryString('/sys/dict/view/findByType', { type }, { cacheData: true })
 }
 
 export default {

@@ -4,7 +4,7 @@
 let fly = require('flyio')
 import util from '@/providers/utils'
 import helper from '@/providers/helper'
-import globalData from '@/providers/globalData'
+import store from '@/store/index'
 
 /**
  *  统一参数
@@ -26,8 +26,9 @@ fly.interceptors.request.use((request) => {
       return Promise.resolve(data)
     }
   }
-  if (globalData.token) { // 给所有请求添加自定义header
-    request.headers['Authorization'] = `${globalData.token}`
+  let token = store.state.token
+  if (token) { // 给所有请求添加自定义header
+    request.headers['Authorization'] = `${token}`
   }
   return request
 })

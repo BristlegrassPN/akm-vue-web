@@ -5,6 +5,7 @@ import '@/styles/index.scss' // global css
 import App from '@/App.vue'
 import router from '@/route'
 import * as filters from './filters'
+import store from './store'
 import utils from '@/providers/utils'
 import http from '@/providers/http_axios'
 import helper from '@/providers/helper'
@@ -18,6 +19,8 @@ Vue.prototype.$http = http
 Vue.prototype.$helper = helper
 Vue.prototype.$globalData = globalData
 
+Vue.prototype.isDebug = process.env.NODE_ENV !== 'production'
+
 Vue.config.productionTip = false
 
 Object.keys(filters).forEach(key => {
@@ -30,6 +33,7 @@ Vue.use(AkmEditor)
 
 const vue = new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')
 

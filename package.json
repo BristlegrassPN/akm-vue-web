@@ -15,6 +15,8 @@
     "flyio": "^0.6.14",
     "vue": "^2.6.10",
     "vue-router": "^3.1.2",
+    "vuex": "^3.1.1",
+    "vuex-persistedstate": "^2.5.4",
     "wangeditor": "^3.1.1"
   },
   "devDependencies": {

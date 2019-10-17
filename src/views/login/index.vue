@@ -44,11 +44,8 @@ export default {
     submit() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.$http.post('/sys/user/open/login', this.form).then(res => {
-            this.$globalData.token = res.token
-            this.$globalData.name = res.name
-            this.$globalData.currentRoleId = res.currentRoleId
-            this.$globalData.roleList = res.roleList
+          this.$http.post('/sys/user/open/login', this.form).then(loginInfo => {
+            this.$store.commit('setLoginInfo', loginInfo)
             this.$router.push('/layout')
           })
           // this.$http.del('/sys/resource/op/batchDel', [1]).then(res => {

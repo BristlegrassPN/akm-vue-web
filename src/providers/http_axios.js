@@ -5,7 +5,7 @@ import axios from 'axios'
 
 import util from '@/providers/utils'
 import helper from '@/providers/helper'
-import globalData from '@/providers/globalData'
+import store from '@/store/index'
 
 /**
  *  统一参数
@@ -29,8 +29,9 @@ const request = function (config) {
       return Promise.resolve(data)
     }
   }
-  if (globalData.token) { //  添加请求头
-    config.headers = { 'Authorization': `${globalData.token}`, ...config.headers }
+  let token = store.state.token
+  if (token) { //  添加请求头
+    config.headers = { 'Authorization': `${token}`, ...config.headers }
   }
   return axiosBaseInstance.request(config).then(({ data }) => {
     let result = data
