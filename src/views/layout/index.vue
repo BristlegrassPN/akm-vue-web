@@ -3,7 +3,6 @@
     <div class="aside">
       <el-menu
         router
-        default-active="/layout/resource"
         class="akm-layout-menu"
         @open="handleOpen"
         @close="handleClose"

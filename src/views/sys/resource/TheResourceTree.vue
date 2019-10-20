@@ -119,12 +119,9 @@ export default {
     },
     delNode(data, event) {
       event.stopPropagation()
-      // let idList = []
-      // this.getNodeId(data, idList)
-      // this.batchDel(idList)
-      this.$http.fly.delete('/sys/resource/op/batchDel', [1],{dataType:'json'}).then(res => {
-        debugger
-      })
+      let idList = []
+      this.getNodeId(data, idList)
+      this.batchDel(idList)
     },
     getNodeId(data, idList) {
       if (data.children && data.children.length) {

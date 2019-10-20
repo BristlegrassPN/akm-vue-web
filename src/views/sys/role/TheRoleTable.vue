@@ -23,7 +23,7 @@
       prop="enable"
       label="启用状态">
       <template slot-scope="scope">
-        <el-switch :value="scope.row.enable"></el-switch>
+        <el-switch :value="scope.row.enable" disabled></el-switch>
       </template>
     </el-table-column>
     <el-table-column

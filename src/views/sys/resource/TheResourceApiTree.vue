@@ -69,7 +69,8 @@ export default {
       return list.filter(item => item.parentId === parentId)
     },
     onCheck(data, checked) {
-      let apiIdList = checked.checkedKeys
+      // 排除api目录类型，只保留uri类型，数据库只记录资源和uri的关系
+      let apiIdList = checked.checkedNodes.filter(node => node.type !== 1).map(node => node.id)
       this.loading = true
       this.$http.post(`/sys/resource/op/updateApiByResourceId?resourceId=${this.formData.id}`, apiIdList).then(() => {
         this.loading = false
@@ -88,6 +89,10 @@ export default {
       return data.name.indexOf(value) !== -1 || data.uri.indexOf(value) !== -1
     },
     onNodeClick(formData) {
+      if (formData.type === 1) { // 资源类型为目录，不需要分配api
+        this.show = false
+        return
+      }
       this.formData = formData
       this.collapseAll()
       this.show = true
